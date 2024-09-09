@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  clickhouse:
+    image: yandex/clickhouse-server:latest
+    container_name: clickhouse
+    ports:
+      - "8123:8123"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    restart: always
+
+  streamlit:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      - AWS_ACCESS_KEY=seu_access_key
+      - AWS_SECRET_KEY=seu_secret_key
+      - CLICKHOUSE_HOST=clickhouse
+    depends_on:
+      - clickhouse
+ 
+
+volumes:
+  clickhouse_data:
+    driver: local
+  
